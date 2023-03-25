@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import authService from '../../components/api-authorization/AuthorizeService';
+import { postRequest, getRequest } from 'services/base';
 
 export class EmployeeCalculate extends Component {
   static displayName = EmployeeCalculate.name;
@@ -96,25 +96,20 @@ export class EmployeeCalculate extends Component {
   }
 
   async calculateSalary() {
+    const { id, absentDays, workedDays } = this.state;
     this.setState({ loadingCalculate: true });
-    const token = await authService.getAccessToken();
-    const requestOptions = {
-        method: 'POST',
-        headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
-        body: JSON.stringify({id: this.state.id,absentDays: this.state.absentDays,workedDays: this.state.workedDays})
-    };
-    const response = await fetch('api/employees/' + this.state.id + '/calculate',requestOptions);
+    const response = await postRequest('employees/' + id + '/calculate', {
+      id: id,
+      absentDays: absentDays,
+      workedDays: workedDays
+    });
     const data = await response.json();
-    this.setState({ loadingCalculate: false,netIncome: data });
+    this.setState({ loadingCalculate: false, netIncome: data });
   }
 
   async getEmployee(id) {
     this.setState({ loading: true,loadingCalculate: false });
-    const token = await authService.getAccessToken();
-    const response = await fetch('api/employees/' + id, {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    });
-
+    const response = getRequest('employees/' + id)
     if(response.status === 200){
         const data = await response.json();
         this.setState({ id: data.id,fullName: data.fullName,birthdate: data.birthdate,tin: data.tin,typeId: data.typeId, loading: false,loadingCalculate: false });

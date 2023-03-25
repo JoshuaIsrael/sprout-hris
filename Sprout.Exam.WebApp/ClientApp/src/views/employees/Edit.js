@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import authService from '../../components/api-authorization/AuthorizeService';
+import { getEmployeeById, updateEmployee } from 'services/employee';
 
 export class EmployeeEdit extends Component {
   static displayName = EmployeeEdit.name;
@@ -69,14 +69,7 @@ export class EmployeeEdit extends Component {
 
   async saveEmployee() {
     this.setState({ loadingSave: true });
-    const token = await authService.getAccessToken();
-    const requestOptions = {
-        method: 'PUT',
-        headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
-        body: JSON.stringify(this.state)
-    };
-    const response = await fetch('api/employees/' + this.state.id,requestOptions);
-
+    const response = await updateEmployee(this.state.id, this.state);
     if(response.status === 200){
         this.setState({ loadingSave: false });
         alert("Employee successfully saved");
@@ -89,10 +82,7 @@ export class EmployeeEdit extends Component {
 
   async getEmployee(id) {
     this.setState({ loading: true,loadingSave: false });
-    const token = await authService.getAccessToken();
-    const response = await fetch('api/employees/' + id, {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    });
+    const response = getEmployeeById(id);
     const data = await response.json();
     this.setState({ id: data.id,fullName: data.fullName,birthdate: data.birthdate,tin: data.tin,typeId: data.typeId, loading: false,loadingSave: false });
   }

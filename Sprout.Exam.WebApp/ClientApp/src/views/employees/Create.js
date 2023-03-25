@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import authService from '../../components/api-authorization/AuthorizeService';
+import { addEmployee } from 'services/employee';
 
 export class EmployeeCreate extends Component {
   static displayName = EmployeeCreate.name;
@@ -68,14 +68,7 @@ export class EmployeeCreate extends Component {
 
   async saveEmployee() {
     this.setState({ loadingSave: true });
-    const token = await authService.getAccessToken();
-    const requestOptions = {
-        method: 'POST',
-        headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
-        body: JSON.stringify(this.state)
-    };
-    const response = await fetch('api/employees',requestOptions);
-
+    const response = await addEmployee(this.state)
     if(response.status === 201){
         this.setState({ loadingSave: false });
         alert("Employee successfully saved");

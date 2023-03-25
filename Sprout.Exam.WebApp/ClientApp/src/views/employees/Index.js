@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import authService from '../../components/api-authorization/AuthorizeService';
+import { deleteEmployee, getEmployees } from 'services/employee';
 
 export class EmployeesIndex extends Component {
   static displayName = EmployeesIndex.name;
@@ -63,21 +63,14 @@ export class EmployeesIndex extends Component {
   }
 
   async populateEmployeeData() {
-    const token = await authService.getAccessToken();
-    const response = await fetch('api/employees', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    });
+    const response = await getEmployees();
+    if(!response) return false;
     const data = await response.json();
     this.setState({ employees: data, loading: false });
   }
 
   async deleteEmployee(id) {
-    const token = await authService.getAccessToken();
-    const requestOptions = {
-        method: 'DELETE',
-        headers: !token ? {} : { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' }
-    };
-    const response = await fetch('api/employees/' + id,requestOptions);
+    const response = await deleteEmployee(id)
     if(response.status === 200){
       this.setState({employees: this.state.employees.filter(function(employee) { 
         return employee.id !== id
