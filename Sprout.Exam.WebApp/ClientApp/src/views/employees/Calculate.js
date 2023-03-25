@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { postRequest, getRequest } from 'services/base';
+import { calculateEmployeeSalary, getEmployeeById } from 'services/employee';
 
 export class EmployeeCalculate extends Component {
   static displayName = EmployeeCalculate.name;
@@ -98,7 +98,7 @@ export class EmployeeCalculate extends Component {
   async calculateSalary() {
     const { id, absentDays, workedDays } = this.state;
     this.setState({ loadingCalculate: true });
-    const response = await postRequest('employees/' + id + '/calculate', {
+    const response = await calculateEmployeeSalary(id, {
       id: id,
       absentDays: absentDays,
       workedDays: workedDays
@@ -109,13 +109,13 @@ export class EmployeeCalculate extends Component {
 
   async getEmployee(id) {
     this.setState({ loading: true,loadingCalculate: false });
-    const response = getRequest('employees/' + id)
+    const response = await getEmployeeById(id)
     if(response.status === 200){
         const data = await response.json();
         this.setState({ id: data.id,fullName: data.fullName,birthdate: data.birthdate,tin: data.tin,typeId: data.typeId, loading: false,loadingCalculate: false });
     }
     else{
-        alert("There was an error occured.");
+        alert("Test.");
         this.setState({ loading: false,loadingCalculate: false });
     }
   }

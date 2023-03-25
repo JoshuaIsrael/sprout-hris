@@ -82,7 +82,7 @@ export class EmployeeEdit extends Component {
 
   async getEmployee(id) {
     this.setState({ loading: true,loadingSave: false });
-    const response = getEmployeeById(id);
+    const response = await getEmployeeById(id);
     const data = await response.json();
     this.setState({ id: data.id,fullName: data.fullName,birthdate: data.birthdate,tin: data.tin,typeId: data.typeId, loading: false,loadingSave: false });
   }
