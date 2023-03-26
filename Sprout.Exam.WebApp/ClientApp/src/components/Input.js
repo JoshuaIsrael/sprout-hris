@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function Input ({
-  type, name, label, placeholder, onChange, value, required
+  type, name, label, placeholder, onChange, value, error, required
 }) {
   return (
     <div className='form-group col-md-6'>
@@ -14,6 +14,7 @@ export default function Input ({
         onChange={onChange} name={name} value={value}
         placeholder={placeholder}
       />
+      {error ? <p className='text-danger'>{error}</p> : null}
     </div>
   )
 }
