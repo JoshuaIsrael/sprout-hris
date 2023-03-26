@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { LoginMenu } from './api-authorization/LoginMenu';
+import authService from './api-authorization/AuthorizeService';
+
 import './NavMenu.css';
 
 export class NavMenu extends Component {
@@ -12,13 +14,22 @@ export class NavMenu extends Component {
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      authenticated: false,
     };
   }
 
-  toggleNavbar () {
+  componentDidMount() {
+    authService.isAuthenticated().then(res => {
+      this.setState({
+        authenticated: res,
+      });
+    })
+  }
+
+  async toggleNavbar () {
     this.setState({
-      collapsed: !this.state.collapsed
+      collapsed: !this.state.collapsed,
     });
   }
 
@@ -31,9 +42,13 @@ export class NavMenu extends Component {
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/employees/index">Employees</NavLink>
-                </NavItem>
+                {
+                  this.state.authenticated ? (
+                    <NavItem>
+                      <NavLink tag={Link} className="text-dark" to="/employees/index">Employees</NavLink>
+                    </NavItem>
+                  ) : null
+                }
                 <LoginMenu>
                 </LoginMenu>
               </ul>
