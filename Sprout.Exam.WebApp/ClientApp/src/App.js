@@ -4,7 +4,7 @@ import { Layout } from './components/Layout';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
-import { Home, Create, Edit, Calculate } from './views/employees/index'
+import { Home, Create, Edit, Calculate } from './views/employees'
 
 import './custom.css'
 import authService from 'components/api-authorization/AuthorizeService';
