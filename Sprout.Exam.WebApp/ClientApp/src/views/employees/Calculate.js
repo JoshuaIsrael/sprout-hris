@@ -93,7 +93,7 @@ export function Calculate ({ history, match }) {
                 <Label text="Salary" value={"20,000"}/>
                 <Label text="Tax" value={"12%"}/>
               </>
-            ) : <Label text="Rate Per Day" value={"5000"}/>
+            ) : <Label text="Rate Per Day" value={"500"}/>
           }
         </Row>
         <Row>
