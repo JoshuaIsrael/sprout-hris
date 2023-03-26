@@ -17,7 +17,7 @@ export const postRequest = async (url, payload) => {
     method: 'POST',
     body: JSON.stringify(payload)
   })
-  return await response?.json()
+  return await parseResponse(response);
 }
 
 export const getRequest = async (url) => {
@@ -26,7 +26,7 @@ export const getRequest = async (url) => {
     ...baseConfig,
     method: 'GET',
   });
-  return await response?.json()
+  return await parseResponse(response);
 }
 
 export const putRequest = async (url, payload) => {
@@ -36,7 +36,7 @@ export const putRequest = async (url, payload) => {
     method: 'PUT',
     body: JSON.stringify(payload),
   });
-  return await response?.json()
+  return await parseResponse(response);
 }
 
 export const deleteRequest = async (url) => {
@@ -45,5 +45,17 @@ export const deleteRequest = async (url) => {
     ...baseConfig,
     method: 'DELETE',
   });
-  return await response?.json()
+  return await parseResponse(response);
+}
+
+const parseResponse = async (response) => {
+  let data = {};
+  try {
+    data = await response?.json()
+  } catch (ex) {
+    data = {
+      isSuccess: false
+    }
+  }
+  return data;
 }

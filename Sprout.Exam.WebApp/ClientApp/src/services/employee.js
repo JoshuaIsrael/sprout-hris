@@ -4,8 +4,8 @@ export const addEmployee = async (payload) => {
   return postRequest('employees', payload)
 }
 
-export const calculateEmployeeSalary = async (id, payload) => {
-  return postRequest('employees/' + id + '/calculate', payload)
+export const calculateEmployeeSalary = async (payload) => {
+  return postRequest('employees/calculate', payload)
 }
 
 export const getEmployees = async () => {

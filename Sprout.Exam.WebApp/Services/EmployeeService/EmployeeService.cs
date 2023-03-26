@@ -135,29 +135,29 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
             return response;
         }
 
-        public async Task<ServiceResponse<double>> CalculateSalary(int id, decimal absentDays, decimal workedDays)
+        public async Task<ServiceResponse<decimal>> CalculateSalary(GetSalaryDto request)
         {
-            var response = new ServiceResponse<double>();
+            var response = new ServiceResponse<decimal>();
 
             try
             {
                 var employee = await _context.Employees
-                    .FirstOrDefaultAsync(e => e.Id == id);
+                    .FirstOrDefaultAsync(e => e.Id == request.Id);
 
                 if (employee is null)
-                    throw new Exception($"Employee with an ID of {id} not found");
+                    throw new Exception($"Employee with an ID of {request.Id} not found");
 
                 var type = (EmployeeType) employee.EmployeeTypeId;
 
                 switch(type)
                 {
                     case EmployeeType.Contractual:
-                        response.Data = 500 * (double) workedDays;
+                        response.Data = 500.0m * request.WorkedDays;
                         break;
                     case EmployeeType.Regular:
-                        var grossSalary = 2000.0;
-                        var totalDeductions = (double) absentDays * (grossSalary / 22);
-                        var totalTax = grossSalary * 0.12;
+                        var grossSalary = 2000.0m;
+                        var totalDeductions = request.AbsentDays * (grossSalary / 22.0m);
+                        var totalTax = grossSalary * 0.12m;
                         response.Data = grossSalary - totalDeductions - totalTax;
                         break;
                     default:

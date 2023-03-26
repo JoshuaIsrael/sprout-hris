@@ -6,7 +6,18 @@ export class Calculate extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { id: 0,fullName: '',birthdate: '',tin: '',typeId: 1,absentDays: 0,workedDays: 0,netIncome: 0, loading: true,loadingCalculate:false };
+    this.state = {
+      id: 0,
+      fullName: '',
+      birthdate: '',
+      tin: '',
+      typeId: 1,
+      absentDays: 0,
+      workedDays: 0,
+      netIncome: 0,
+      loading: true,
+      loadingCalculate:false
+    };
   }
 
   componentDidMount() {
@@ -98,10 +109,10 @@ export class Calculate extends Component {
   async calculateSalary() {
     const { id, absentDays, workedDays } = this.state;
     this.setState({ loadingCalculate: true });
-    const response = await calculateEmployeeSalary(id, {
+    const response = await calculateEmployeeSalary({
       id: id,
-      absentDays: absentDays,
-      workedDays: workedDays
+      absentDays: parseInt(absentDays),
+      workedDays: parseInt(workedDays),
     });
     const data = await response.data;
     this.setState({ loadingCalculate: false, netIncome: data });

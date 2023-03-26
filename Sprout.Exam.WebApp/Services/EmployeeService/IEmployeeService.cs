@@ -12,6 +12,6 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
         public Task<ServiceResponse<GetEmployeeDto>> GetEmployeeById(int id);
         public Task<ServiceResponse<GetEmployeeDto>> UpdateEmployee(EditEmployeeDto employee);
         public Task<ServiceResponse<bool>> DeleteEmployee(int id);
-        public Task<ServiceResponse<double>> CalculateSalary(int id, decimal absentDays, decimal workedDays);
+        public Task<ServiceResponse<decimal>> CalculateSalary(GetSalaryDto request);
     }
 }
