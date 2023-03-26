@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { deleteEmployee, getEmployees } from 'services/employee';
 import Modal from 'components/Modal';
 
+const headers = ['Full Name', 'Birthdate', 'TIN', 'Type', 'Actions']
+
 export function Home({ history }) {
   const [currentEmployee, setCurrentEmployee] = useState(null)
   const [shouldDelete, setShouldDelete] = useState(false);
@@ -45,13 +47,7 @@ export function Home({ history }) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Birthdate</th>
-            <th>TIN</th>
-            <th>Type</th>
-            <th>Actions</th>
-          </tr>
+          <tr>{ headers.map(header => <th key={header}>{header}</th>) }</tr>
         </thead>
         <tbody>
           {employees.map(employee =>
@@ -59,7 +55,7 @@ export function Home({ history }) {
               <td>{employee.fullName}</td>
               <td>{employee.birthdate}</td>
               <td>{employee.tin}</td>
-              <td>{employee.typeId === 1?"Regular":"Contractual"}</td>
+              <td>{employee.typeId === 1 ? "Regular" : "Contractual"}</td>
               <td>
                 <button type='button' className='btn btn-info mr-2' onClick={() => onEdit(employee.id)} >Edit</button>
                 <button type='button' className='btn btn-primary mr-2' onClick={() => onCalculate(employee.id)}>Calculate</button>
@@ -84,7 +80,8 @@ export function Home({ history }) {
         <p><button type='button' className='btn btn-success mr-2' onClick={onAdd} >Create</button></p>
         {isLoading ? <p><em>Loading...</em></p> : <Employees/>}
       </div>
-      <Modal title={'Confirm Delete'}
+      <Modal
+        title={'Confirm Delete'}
         isOpen={shouldDelete} toggle={onToggle}
         primary={'Confirm'} secondary={'Cancel'}
         onPrimary={onConfirmDelete} onSecondary={onToggle}
