@@ -2,7 +2,7 @@
 {
     public enum EmployeeType
     {
-        Contractual = 0,
-        Regular = 1,
+        Regular = 0,
+        Contractual = 1,
     }
 }

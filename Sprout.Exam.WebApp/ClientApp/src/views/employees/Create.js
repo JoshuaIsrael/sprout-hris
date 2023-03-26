@@ -3,8 +3,8 @@ import { addEmployee } from 'services/employee';
 import { Button, Input, Modal, Row, Select } from 'components';
 
 const options = [
-  { value: 0, label: 'Contractual'},
-  { value: 1, label: 'Regular'},
+  { value: 0, label: 'Regular'},
+  { value: 1, label: 'Contractual'},
 ]
 
 export function Create({ history }) {

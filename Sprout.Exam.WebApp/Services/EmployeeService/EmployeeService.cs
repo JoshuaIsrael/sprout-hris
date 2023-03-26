@@ -152,7 +152,7 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
 
                 var salaryCalculator = CalculatorFactory.CreateCalculator(type);
 
-                response.Data = salaryCalculator.GetSalary(request);
+                response.Data = Math.Round(salaryCalculator.GetSalary(request), 2);
             }
             catch (Exception ex)
             {

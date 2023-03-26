@@ -47,8 +47,8 @@ export class Edit extends Component {
           <div className='form-group col-md-6'>
             <label htmlFor='inputEmployeeType4'>Employee Type: *</label>
             <select id='inputEmployeeType4' onChange={this.handleChange.bind(this)} value={this.state.typeId}  name="typeId" className='form-control'>
-              <option value='1'>Regular</option>
-              <option value='2'>Contractual</option>
+              <option value={0}>Regular</option>
+              <option value={1}>Contractual</option>
             </select>
           </div>
           </div>

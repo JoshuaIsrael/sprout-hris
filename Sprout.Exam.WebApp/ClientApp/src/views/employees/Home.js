@@ -54,7 +54,7 @@ export function Home({ history }) {
               <td>{employee.fullName}</td>
               <td>{employee.birthdate}</td>
               <td>{employee.tin}</td>
-              <td>{employee.typeId === 1 ? "Regular" : "Contractual"}</td>
+              <td>{employee.typeId === 0 ? "Regular" : "Contractual"}</td>
               <td>
                 <button type='button' className='btn btn-info mr-2' onClick={() => onEdit(employee.id)} >Edit</button>
                 <button type='button' className='btn btn-primary mr-2' onClick={() => onCalculate(employee.id)}>Calculate</button>
