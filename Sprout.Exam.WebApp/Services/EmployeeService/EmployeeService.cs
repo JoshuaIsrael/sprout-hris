@@ -29,7 +29,7 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
 
             try
             {
-                var employee = _context.Employees.Add(_mapper.Map<Employee>(newEmployee));
+                _context.Employees.Add(_mapper.Map<Employee>(newEmployee));
                 await _context.SaveChangesAsync();
                 response.Data = true;
             }
@@ -148,7 +148,7 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
                 if (employee is null)
                     throw new Exception($"Employee with an ID of {request.Id} not found");
 
-                var type = (EmployeeType) employee.EmployeeTypeId;
+                var type = (EmployeeType) employee.TypeId;
 
                 var salaryCalculator = CalculatorFactory.CreateCalculator(type);
 
