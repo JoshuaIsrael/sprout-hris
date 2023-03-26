@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { calculateEmployeeSalary, getEmployeeById } from 'services/employee';
 
-export class EmployeeCalculate extends Component {
-  static displayName = EmployeeCalculate.name;
+export class Calculate extends Component {
+  static displayName = Calculate.name;
 
   constructor(props) {
     super(props);

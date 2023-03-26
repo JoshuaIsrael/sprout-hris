@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { addEmployee } from 'services/employee';
 
-export class EmployeeCreate extends Component {
-  static displayName = EmployeeCreate.name;
+export class Create extends Component {
+  static displayName = Create.name;
 
   constructor(props) {
     super(props);

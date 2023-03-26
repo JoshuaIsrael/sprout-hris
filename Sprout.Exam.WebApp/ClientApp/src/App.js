@@ -1,32 +1,33 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
+import React, { useEffect } from 'react';
+import { Route, useHistory } from 'react-router';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { Counter } from './components/Counter';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
-import { EmployeesIndex } from './views/employees/Index';
-import { EmployeeCreate } from './views/employees/Create';
-import { EmployeeEdit } from './views/employees/Edit';
-import { EmployeeCalculate } from './views/employees/Calculate';
+import { Home, Create, Edit, Calculate } from './views/employees/index'
 
 import './custom.css'
+import authService from 'components/api-authorization/AuthorizeService';
 
-export default class App extends Component {
-  static displayName = App.name;
+export default function App() {
+  const history = useHistory()
 
-  render () {
-    return (
-      <Layout>
-        <Route exact path='/' component={EmployeesIndex} />
-        <Route path='/counter' component={Counter} />
-        <AuthorizeRoute path='/employees/index' component={EmployeesIndex} />
-        <AuthorizeRoute path='/employees/create' component={EmployeeCreate} />
-        <AuthorizeRoute path='/employees/:id/edit' component={EmployeeEdit} />
-        <AuthorizeRoute path='/employees/:id/calculate' component={EmployeeCalculate} />
-        <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
-      </Layout>
-    );
-  }
+  useEffect(() => {
+    authService.isAuthenticated().then(response => {
+      if(!response){
+        history.push('authentication/login')
+      }
+    })
+  }, [])
+
+  return (
+    <Layout>
+      <Route exact path='/' component={Home} />
+      <AuthorizeRoute path='/employees/index' component={Home} />
+      <AuthorizeRoute path='/employees/create' component={Create} />
+      <AuthorizeRoute path='/employees/:id/edit' component={Edit} />
+      <AuthorizeRoute path='/employees/:id/calculate' component={Calculate} />
+      <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
+    </Layout>
+  )
 }
