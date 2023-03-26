@@ -1,8 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { deleteEmployee, getEmployees } from 'services/employee';
-import Modal from 'components/Modal';
+import { Modal, Table } from 'components';
 
-const headers = ['Full Name', 'Birthdate', 'TIN', 'Type', 'Actions']
+const columns = [
+  {
+    title: 'Full Name',
+    data: 'fullName'
+  },
+  {
+    title: 'Birthdate',
+    data: 'birthdate'
+  },
+  {
+    title: 'TIN',
+    data: 'tin'
+  },
+  {
+    title: 'Type',
+    render: (record) => record.typeId === 0 ? "Regular" : "Contractual"
+  },
+]
 
 export function Home({ history }) {
   const [currentEmployee, setCurrentEmployee] = useState(null)
@@ -14,9 +31,9 @@ export function Home({ history }) {
 
   const onAdd = () => history.push("/employees/create");
 
-  const onEdit = (id) => history.push("/employees/" + id + "/edit");
+  const onEdit = (employee) => history.push("/employees/" + employee.id + "/edit");
 
-  const onCalculate = (id) => history.push("/employees/" + id + "/calculate");
+  const onCalculate = (employee) => history.push("/employees/" + employee.id + "/calculate");
 
   const onDelete = (employee) => {
     setCurrentEmployee(employee)
@@ -42,30 +59,23 @@ export function Home({ history }) {
     setShouldDelete(false);
   }
 
-  const Employees = () => {
-    return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>{ headers.map(header => <th key={header}>{header}</th>) }</tr>
-        </thead>
-        <tbody>
-          {employees.map(employee =>
-            <tr key={employee.id}>
-              <td>{employee.fullName}</td>
-              <td>{employee.birthdate}</td>
-              <td>{employee.tin}</td>
-              <td>{employee.typeId === 0 ? "Regular" : "Contractual"}</td>
-              <td>
-                <button type='button' className='btn btn-info mr-2' onClick={() => onEdit(employee.id)} >Edit</button>
-                <button type='button' className='btn btn-primary mr-2' onClick={() => onCalculate(employee.id)}>Calculate</button>
-                <button type='button' className='btn btn-danger mr-2' onClick={() => onDelete(employee)}>Delete</button>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
-  }
+  const actions = useMemo(() => [
+    {
+      label: 'Edit',
+      type: 'info',
+      onClick: onEdit
+    },
+    {
+      label: 'Calculate',
+      type: 'primary',
+      onClick: onCalculate
+    },
+    {
+      label: 'Delete',
+      type: 'danger',
+      onClick: onDelete
+    },
+  ], [])
 
   useEffect(() => {
     populateEmployeeData();
@@ -77,7 +87,11 @@ export function Home({ history }) {
         <h1 id="tabelLabel" >Employees</h1>
         <p>This page should fetch data from the server.</p>
         <p><button type='button' className='btn btn-success mr-2' onClick={onAdd} >Create</button></p>
-        {isLoading ? <p><em>Loading...</em></p> : <Employees/>}
+        {
+          isLoading ? <p><em>Loading...</em></p> : (
+            <Table data={employees} columns={columns} actions={actions} />
+          )
+        }
       </div>
       <Modal
         title={'Confirm Delete'}
