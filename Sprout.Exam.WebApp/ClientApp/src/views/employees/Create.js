@@ -1,82 +1,96 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { addEmployee } from 'services/employee';
+import { Button, Input, Modal, Row, Select } from 'components';
 
-export class Create extends Component {
-  static displayName = Create.name;
+const options = [
+  { value: 0, label: 'Contractual'},
+  { value: 1, label: 'Regular'},
+]
 
-  constructor(props) {
-    super(props);
-    this.state = { fullName: '',birthdate: '',tin: '',typeId: 1, loading: false,loadingSave:false };
+export function Create({ history }) {
+  const [shouldAdd, setShouldAdd] = useState(false);
+  const [user, setUser] = useState({
+    fullName: '',
+    birthdate: '',
+    tin: '',
+    typeId: 0
+  })
+  const [isLoading, setIsLoading] = useState({
+    form: false,
+    loadingSave: false
+  })
+
+  const onToggle = () => setShouldAdd(prev => !prev);
+
+  const onBack = () => history.push("/employees/index");
+
+  const onChange = (event) => {
+    event.persist();
+    setUser(prev => {
+      prev[event.target.name] = event?.target?.value
+      return {...prev}
+    })
   }
 
-  componentDidMount() {
+  const onSubmit = () => {
+    setShouldAdd(true);
   }
 
-  handleChange(event) {
-    this.setState({ [event.target.name] : event.target.value});
-  }
-
-  handleSubmit(e){
-      e.preventDefault();
-      if (window.confirm("Are you sure you want to save?")) {
-        this.saveEmployee();
-      } 
-  }
-
-  render() {
-
-    let contents = this.state.loading
-    ? <p><em>Loading...</em></p>
-    : <div>
-    <form>
-<div className='form-row'>
-<div className='form-group col-md-6'>
-  <label htmlFor='inputFullName4'>Full Name: *</label>
-  <input type='text' className='form-control' id='inputFullName4' onChange={this.handleChange.bind(this)} name="fullName" value={this.state.fullName} placeholder='Full Name' />
-</div>
-<div className='form-group col-md-6'>
-  <label htmlFor='inputBirthdate4'>Birthdate: *</label>
-  <input type='date' className='form-control' id='inputBirthdate4' onChange={this.handleChange.bind(this)} name="birthdate" value={this.state.birthdate} placeholder='Birthdate' />
-</div>
-</div>
-<div className="form-row">
-<div className='form-group col-md-6'>
-  <label htmlFor='inputTin4'>TIN: *</label>
-  <input type='text' className='form-control' id='inputTin4' onChange={this.handleChange.bind(this)} value={this.state.tin} name="tin" placeholder='TIN' />
-</div>
-<div className='form-group col-md-6'>
-  <label htmlFor='inputEmployeeType4'>Employee Type: *</label>
-  <select id='inputEmployeeType4' onChange={this.handleChange.bind(this)} value={this.state.typeId}  name="typeId" className='form-control'>
-    <option value='1'>Regular</option>
-    <option value='2'>Contractual</option>
-  </select>
-</div>
-</div>
-<button type="submit" onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingSave} className="btn btn-primary mr-2">{this.state.loadingSave?"Loading...": "Save"}</button>
-<button type="button" onClick={() => this.props.history.push("/employees/index")} className="btn btn-primary">Back</button>
-</form>
-</div>;
-
-    return (
-        <div>
-        <h1 id="tabelLabel" >Employee Create</h1>
-        <p>All fields are required</p>
-        {contents}
-      </div>
-    );
-  }
-
-  async saveEmployee() {
-    this.setState({ loadingSave: true });
-    const response = await addEmployee(this.state)
+  const onConfirmAdd = async () => {
+    setIsLoading(prev => ({...prev, loadingSave: true }));
+    const response = await addEmployee(user)
     if(response.status === 201){
-        this.setState({ loadingSave: false });
-        alert("Employee successfully saved");
-        this.props.history.push("/employees/index");
+      this.setState({ loadingSave: false });
+      alert("Employee successfully saved");
+      this.props.history.push("/employees/index");
     }
     else{
         alert("There was an error occured.");
     }
   }
 
+  return isLoading.form ? <p><em>Loading...</em></p> : (
+    <>
+      <div>
+        <h1 id="tabelLabel" >Employee Create</h1>
+        <p>All fields are required</p>
+        <form>
+          <Row>
+            <Input
+              name={'fullName'} label={'Full Name'} placeholder={'Full Name'}
+              onChange={onChange} value={user.fullName} required
+            />
+            <Input
+              type={'date'} name={'birthdate'}
+              label={'Birthdate'} placeholder={'Birthdate'}
+              onChange={onChange} value={user.birthdate} required
+            />
+          </Row>
+          <Row>
+            <Input
+              name={'tin'} label={'TIN'} placeholder={'TIN'}
+              onChange={onChange} value={user.tin} required
+            />
+            <Select
+              name={'typeId'} label={'Employee Type'}
+              onChange={onChange} value={user.typeId}
+              options={options} required
+            />
+          </Row>
+          <Button onClick={onSubmit} disabled={isLoading.loadingSave} primary>
+            {isLoading.loadingSave ? "Loading..." : "Save"}
+          </Button>
+          <Button onClick={onBack}>Back</Button>
+        </form>
+      </div>
+      <Modal
+        title={'Confirm Add'}
+        isOpen={shouldAdd} toggle={onToggle}
+        primary={'Confirm'} secondary={'Cancel'}
+        onPrimary={onConfirmAdd} onSecondary={onToggle}
+      >
+        Are you sure you want to add?
+      </Modal>
+    </>
+  )
 }
