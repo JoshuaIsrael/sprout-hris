@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Sprout.Exam.Business.DataTransferObjects;
 using Sprout.Exam.WebApp.Data;
 using Sprout.Exam.WebApp.Models;
+using Sprout.Exam.Common.Enums;
 
 namespace Sprout.Exam.WebApp.Services.EmployeeService
 {
@@ -124,6 +125,45 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
                 employee.IsDeleted = true;
                 await _context.SaveChangesAsync();
                 response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<double>> CalculateSalary(int id, decimal absentDays, decimal workedDays)
+        {
+            var response = new ServiceResponse<double>();
+
+            try
+            {
+                var employee = await _context.Employees
+                    .FirstOrDefaultAsync(e => e.Id == id);
+
+                if (employee is null)
+                    throw new Exception($"Employee with an ID of {id} not found");
+
+                var type = (EmployeeType) employee.EmployeeTypeId;
+
+                switch(type)
+                {
+                    case EmployeeType.Contractual:
+                        response.Data = 500 * (double) workedDays;
+                        break;
+                    case EmployeeType.Regular:
+                        var grossSalary = 2000.0;
+                        var totalDeductions = (double) absentDays * (grossSalary / 22);
+                        var totalTax = grossSalary * 0.12;
+                        response.Data = grossSalary - totalDeductions - totalTax;
+                        break;
+                    default:
+                        response.Data = 0;
+                        break;
+                }
             }
             catch (Exception ex)
             {
