@@ -8,9 +8,9 @@ namespace Sprout.Exam.WebApp
 {
     public static class StaticEmployees
     {
-        public static List<EmployeeDto> ResultList = new()
+        public static List<GetEmployeeDto> ResultList = new()
         {
-            new EmployeeDto
+            new GetEmployeeDto
             {
                 Birthdate = "1993-03-25",
                 FullName = "Jane Doe",
@@ -18,7 +18,7 @@ namespace Sprout.Exam.WebApp
                 Tin = "123215413",
                 TypeId = 1
             },
-            new EmployeeDto
+            new GetEmployeeDto
             {
                 Birthdate = "1993-05-28",
                 FullName = "John Doe",

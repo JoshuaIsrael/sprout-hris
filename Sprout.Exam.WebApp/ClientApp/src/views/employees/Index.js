@@ -64,8 +64,8 @@ export class EmployeesIndex extends Component {
 
   async populateEmployeeData() {
     const response = await getEmployees();
-    if(!response) return false;
-    const data = await response.json();
+    if(response.status !== 200) return;
+    const data = (await response.json()).data;
     this.setState({ employees: data, loading: false });
   }
 

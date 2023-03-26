@@ -6,7 +6,7 @@ using Sprout.Exam.WebApp.Models;
 
 namespace Sprout.Exam.WebApp.Data
 {
-  public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public ApplicationDbContext(
             DbContextOptions options,
@@ -14,6 +14,6 @@ namespace Sprout.Exam.WebApp.Data
         {
         }
 
-        DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<Employee> Employees => Set<Employee>();
     }
 }

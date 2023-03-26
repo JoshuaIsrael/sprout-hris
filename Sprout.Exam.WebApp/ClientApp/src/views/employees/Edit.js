@@ -28,35 +28,34 @@ export class EmployeeEdit extends Component {
     let contents = this.state.loading
     ? <p><em>Loading...</em></p>
     : <div>
-    <form>
-<div className='form-row'>
-<div className='form-group col-md-6'>
-  <label htmlFor='inputFullName4'>Full Name: *</label>
-  <input type='text' className='form-control' id='inputFullName4' onChange={this.handleChange.bind(this)} name="fullName" value={this.state.fullName} placeholder='Full Name' />
-</div>
-<div className='form-group col-md-6'>
-  <label htmlFor='inputBirthdate4'>Birthdate: *</label>
-  <input type='date' className='form-control' id='inputBirthdate4' onChange={this.handleChange.bind(this)} name="birthdate" value={this.state.birthdate} placeholder='Birthdate' />
-</div>
-</div>
-<div className="form-row">
-<div className='form-group col-md-6'>
-  <label htmlFor='inputTin4'>TIN: *</label>
-  <input type='text' className='form-control' id='inputTin4' onChange={this.handleChange.bind(this)} value={this.state.tin} name="tin" placeholder='TIN' />
-</div>
-<div className='form-group col-md-6'>
-  <label htmlFor='inputEmployeeType4'>Employee Type: *</label>
-  <select id='inputEmployeeType4' onChange={this.handleChange.bind(this)} value={this.state.typeId}  name="typeId" className='form-control'>
-    <option value='1'>Regular</option>
-    <option value='2'>Contractual</option>
-  </select>
-</div>
-</div>
-<button type="submit" onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingSave} className="btn btn-primary mr-2">{this.state.loadingSave?"Loading...": "Save"}</button>
-<button type="button" onClick={() => this.props.history.push("/employees/index")} className="btn btn-primary">Back</button>
-</form>
-</div>;
-
+        <form>
+          <div className='form-row'>
+          <div className='form-group col-md-6'>
+            <label htmlFor='inputFullName4'>Full Name: *</label>
+            <input type='text' className='form-control' id='inputFullName4' onChange={this.handleChange.bind(this)} name="fullName" value={this.state.fullName} placeholder='Full Name' />
+          </div>
+          <div className='form-group col-md-6'>
+            <label htmlFor='inputBirthdate4'>Birthdate: *</label>
+            <input type='date' className='form-control' id='inputBirthdate4' onChange={this.handleChange.bind(this)} name="birthdate" value={this.state.birthdate} placeholder='Birthdate' />
+          </div>
+          </div>
+          <div className="form-row">
+          <div className='form-group col-md-6'>
+            <label htmlFor='inputTin4'>TIN: *</label>
+            <input type='text' className='form-control' id='inputTin4' onChange={this.handleChange.bind(this)} value={this.state.tin} name="tin" placeholder='TIN' />
+          </div>
+          <div className='form-group col-md-6'>
+            <label htmlFor='inputEmployeeType4'>Employee Type: *</label>
+            <select id='inputEmployeeType4' onChange={this.handleChange.bind(this)} value={this.state.typeId}  name="typeId" className='form-control'>
+              <option value='1'>Regular</option>
+              <option value='2'>Contractual</option>
+            </select>
+          </div>
+          </div>
+          <button type="submit" onClick={this.handleSubmit.bind(this)} disabled={this.state.loadingSave} className="btn btn-primary mr-2">{this.state.loadingSave?"Loading...": "Save"}</button>
+          <button type="button" onClick={() => this.props.history.push("/employees/index")} className="btn btn-primary">Back</button>
+        </form>
+      </div>;
 
     return (
         <div>
@@ -83,7 +82,16 @@ export class EmployeeEdit extends Component {
   async getEmployee(id) {
     this.setState({ loading: true,loadingSave: false });
     const response = await getEmployeeById(id);
-    const data = await response.json();
-    this.setState({ id: data.id,fullName: data.fullName,birthdate: data.birthdate,tin: data.tin,typeId: data.typeId, loading: false,loadingSave: false });
+    if(response.status !== 200) return;
+    const data = (await response.json()).data;
+    this.setState({
+        id: data.id,
+        fullName: data.fullName,
+        birthdate: new Date(data.birthdate).toISOString().split('T')[0],
+        tin: data.tin,
+        typeId: data.typeId,
+        loading: false,
+        loadingSave: false
+    });
   }
 }
