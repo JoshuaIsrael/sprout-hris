@@ -40,9 +40,9 @@ export function Create({ history }) {
     setIsLoading(prev => ({...prev, loadingSave: true }));
     const response = await addEmployee(user)
     if(response.status === 201){
-      this.setState({ loadingSave: false });
+      setIsLoading(prev => ({...prev, loadingSave: false }));
       alert("Employee successfully saved");
-      this.props.history.push("/employees/index");
+      history.push("/employees/index");
     }
     else{
         alert("There was an error occured.");
