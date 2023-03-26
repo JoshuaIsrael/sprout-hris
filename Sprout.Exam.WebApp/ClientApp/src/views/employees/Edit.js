@@ -68,8 +68,8 @@ export class Edit extends Component {
 
   async saveEmployee() {
     this.setState({ loadingSave: true });
-    const response = await updateEmployee(this.state.id, this.state);
-    if(response.status === 200){
+    const { isSuccess } = await updateEmployee(this.state.id, this.state);
+    if(isSuccess){
         this.setState({ loadingSave: false });
         alert("Employee successfully saved");
         this.props.history.push("/employees/index");
@@ -81,9 +81,8 @@ export class Edit extends Component {
 
   async getEmployee(id) {
     this.setState({ loading: true,loadingSave: false });
-    const response = await getEmployeeById(id);
-    if(response.status !== 200) return;
-    const data = (await response.json()).data;
+    const { isSuccess, data } = await getEmployeeById(id);
+    if(!isSuccess) return;
     this.setState({
         id: data.id,
         fullName: data.fullName,

@@ -12,34 +12,38 @@ const getBaseConfig = async () => {
 
 export const postRequest = async (url, payload) => {
   const baseConfig = await getBaseConfig();
-  return await fetch(`api/${url}`, {
+  const response =  await fetch(`api/${url}`, {
     ...baseConfig,
     method: 'POST',
     body: JSON.stringify(payload)
   })
+  return await response?.json()
 }
 
 export const getRequest = async (url) => {
   const baseConfig = await getBaseConfig();
-  return await fetch(`api/${url}`, {
+  const response = await fetch(`api/${url}`, {
     ...baseConfig,
     method: 'GET',
   });
+  return await response?.json()
 }
 
 export const putRequest = async (url, payload) => {
   const baseConfig = await getBaseConfig();
-  return await fetch(`api/${url}`, {
+  const response =  await fetch(`api/${url}`, {
     ...baseConfig,
     method: 'PUT',
     body: JSON.stringify(payload),
   });
+  return await response?.json()
 }
 
 export const deleteRequest = async (url) => {
   const baseConfig = await getBaseConfig();
-  return await fetch(`api/${url}`, {
+  const response =  await fetch(`api/${url}`, {
     ...baseConfig,
     method: 'DELETE',
   });
+  return await response?.json()
 }

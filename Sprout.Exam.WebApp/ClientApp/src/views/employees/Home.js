@@ -24,17 +24,16 @@ export function Home({ history }) {
   }
 
   const populateEmployeeData = async () => {
-    const response = await getEmployees();
-    if(response.status !== 200) return;
-    const data = (await response.json()).data;
+    const { isSuccess, data } = await getEmployees();
+    if(!isSuccess) return;
     setEmployees(data);
     setIsLoading(false);
   }
 
   const onConfirmDelete = async () => {
     const { id } = currentEmployee;
-    const response = await deleteEmployee(id)
-    if(response.status === 200){
+    const { isSuccess } = await deleteEmployee(id)
+    if(isSuccess){
       setEmployees(prev => prev.filter(employee => employee.id !== id))
     }
     else{

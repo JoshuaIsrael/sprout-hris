@@ -38,8 +38,8 @@ export function Create({ history }) {
 
   const onConfirmAdd = async () => {
     setIsLoading(prev => ({...prev, loadingSave: true }));
-    const response = await addEmployee(user)
-    if(response.status === 201){
+    const { isSuccess } = await addEmployee(user)
+    if(isSuccess){
       setIsLoading(prev => ({...prev, loadingSave: false }));
       alert("Employee successfully saved");
       history.push("/employees/index");

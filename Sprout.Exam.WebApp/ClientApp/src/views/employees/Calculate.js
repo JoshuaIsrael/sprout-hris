@@ -103,15 +103,14 @@ export class Calculate extends Component {
       absentDays: absentDays,
       workedDays: workedDays
     });
-    const data = await response.json();
+    const data = await response.data;
     this.setState({ loadingCalculate: false, netIncome: data });
   }
 
   async getEmployee(id) {
     this.setState({ loading: true,loadingCalculate: false });
-    const response = await getEmployeeById(id)
-    if(response.status === 200){
-        const data = await response.json();
+    const { isSuccess, data } = await getEmployeeById(id)
+    if(isSuccess){
         this.setState({ id: data.id,fullName: data.fullName,birthdate: data.birthdate,tin: data.tin,typeId: data.typeId, loading: false,loadingCalculate: false });
     }
     else{
