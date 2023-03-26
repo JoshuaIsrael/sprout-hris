@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, useHistory } from 'react-router';
+import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
@@ -10,12 +10,10 @@ import './custom.css'
 import authService from 'components/api-authorization/AuthorizeService';
 
 export default function App() {
-  const history = useHistory()
-
   useEffect(() => {
     authService.isAuthenticated().then(response => {
       if(!response){
-        history.push('authentication/login')
+        authService.signIn();
       }
     })
   }, [])
