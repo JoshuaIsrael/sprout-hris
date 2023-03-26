@@ -8,6 +8,7 @@ using Sprout.Exam.Business.DataTransferObjects;
 using Sprout.Exam.WebApp.Data;
 using Sprout.Exam.WebApp.Models;
 using Sprout.Exam.Common.Enums;
+using Sprout.Exam.Business.Factories.CalculatorFactory;
 
 namespace Sprout.Exam.WebApp.Services.EmployeeService
 {
@@ -149,21 +150,9 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
 
                 var type = (EmployeeType) employee.EmployeeTypeId;
 
-                switch(type)
-                {
-                    case EmployeeType.Contractual:
-                        response.Data = 500.0m * request.WorkedDays;
-                        break;
-                    case EmployeeType.Regular:
-                        var grossSalary = 2000.0m;
-                        var totalDeductions = request.AbsentDays * (grossSalary / 22.0m);
-                        var totalTax = grossSalary * 0.12m;
-                        response.Data = grossSalary - totalDeductions - totalTax;
-                        break;
-                    default:
-                        response.Data = 0;
-                        break;
-                }
+                var salaryCalculator = CalculatorFactory.CreateCalculator(type);
+
+                response.Data = salaryCalculator.GetSalary(request);
             }
             catch (Exception ex)
             {
