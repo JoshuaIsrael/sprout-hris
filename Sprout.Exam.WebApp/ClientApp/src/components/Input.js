@@ -10,7 +10,7 @@ export default function Input ({
         {required ? <span className='text-danger'> *</span> : null}
       </label>
       <input
-        type={type} className='form-control' id={name}
+        type={type} className='form-control mb-2' id={name}
         onChange={onChange} name={name} value={value}
         placeholder={placeholder}
       />

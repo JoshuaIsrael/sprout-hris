@@ -1,7 +1,12 @@
+export const camelToNormal = (str) => {
+  const result = str.replace(/([A-Z])/g, ' $1').toLowerCase();
+  return result.charAt(0).toUpperCase() + result.slice(1);
+};
+
 export const validateField = (fieldName, fieldValue) => {
   let errors = {};
   if (typeof fieldValue === 'string' && !fieldValue.trim()) {
-    errors[fieldName] = `${fieldName} is required`;
+    errors[fieldName] = `${camelToNormal(fieldName)} is required`;
   }
   return errors;
 }
