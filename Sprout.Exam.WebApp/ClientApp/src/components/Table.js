@@ -13,8 +13,8 @@ export default function Table ({
           <tr key={index}>
             { 
               columns.map(column => column.render ?
-                <td key={index}>{column.render(item)}</td> :
-                <td key={index}>{item[column.data]}</td>
+                <td key={column.title}>{column.render(item)}</td> :
+                <td key={column.title}>{item[column.data]}</td>
               ) 
             }
             {
@@ -23,6 +23,7 @@ export default function Table ({
                   {
                     actions.map(action =>
                       <button
+                        key={action.label}
                         type='button' className={`btn btn-${action.type} mr-2`}
                         onClick={() => action.onClick(item)}
                       >
