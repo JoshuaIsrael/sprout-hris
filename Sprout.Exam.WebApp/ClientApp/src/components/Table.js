@@ -6,7 +6,10 @@ export default function Table ({
   return (
     <table className='table table-striped' aria-labelledby="tabelLabel">
       <thead>
-        <tr>{ columns.map(column => <th key={column.title}>{column.title}</th>) }</tr>
+        <tr>
+          { columns.map(column => <th key={column.title}>{column.title}</th>) }
+          <th key={'actions'}>Actions</th>
+        </tr>
       </thead>
       <tbody>
         {data.map((item, index) =>
