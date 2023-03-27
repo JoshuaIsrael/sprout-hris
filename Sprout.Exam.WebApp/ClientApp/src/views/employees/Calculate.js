@@ -39,8 +39,8 @@ export function Calculate ({ history, match }) {
     setIsLoading(prev => ({ ...prev, calculate: true }))
     const response = await calculateEmployeeSalary({
       id: user.id,
-      absentDays: parseInt(absentDays),
-      workedDays: parseInt(workedDays),
+      absentDays: Number(absentDays),
+      workedDays: Number(workedDays),
     });
     const data = await response.data;
     setIsLoading(prev => ({ ...prev, calculate: false }))
