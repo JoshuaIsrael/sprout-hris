@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { addEmployee } from 'services/employee';
 import { Button, Input, Modal, Row, Select } from 'components';
+import { employmentTypes } from 'constants/enums'
 import { validateForm } from 'utils/helpers';
-
-const options = [
-  { value: 0, label: 'Regular'},
-  { value: 1, label: 'Contractual'},
-]
 
 const defaultValues = {
   user: { fullName: '', birthdate: '', tin: '', typeId: 0 },
@@ -47,7 +43,7 @@ export function Create({ history }) {
       history.push("/employees/index");
     }
     else{
-        alert("There was an error occured.");
+      alert("There was an error occured.");
     }
   }
 
@@ -79,7 +75,7 @@ export function Create({ history }) {
             <Select
               name={'typeId'} label={'Employee Type'}
               onChange={onChange} value={user.typeId}
-              options={options} required
+              options={employmentTypes} required
             />
           </Row>
           <Button onClick={onSubmit} disabled={isLoading.loadingSave} primary>

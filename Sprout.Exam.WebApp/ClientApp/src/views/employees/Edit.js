@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getEmployeeById, updateEmployee } from 'services/employee';
+import { Button, Input, Row, Select } from 'components';
+import { employmentTypes } from 'constants/enums'
+import { validateForm } from 'utils/helpers';
 
 export function Edit ({
   history, match
@@ -8,8 +11,9 @@ export function Edit ({
     id: 0, fullName: '', birthdate: '', tin: '', typeId: 1,
   })
   const [loading, setLoading] = useState({
-    form: true, loadingSave:false
+    form: true, loadingSave: false
   })
+  const [errors, setErrors] = useState({})
 
   useEffect(() => {
     getEmployee(match.params.id);
@@ -25,8 +29,10 @@ export function Edit ({
 
   const onBack = () => history.push("/employees/index");
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = () => {
+    const success = validateForm(user);
+    setErrors(success);
+    if (success !== true) return;
     if (window.confirm("Are you sure you want to save?")) {
       saveEmployee();
     }
@@ -65,31 +71,35 @@ export function Edit ({
       <p>All fields are required</p>
       <div>
         <form>
-          <div className='form-row'>
-          <div className='form-group col-md-6'>
-            <label htmlFor='inputFullName4'>Full Name: *</label>
-            <input type='text' className='form-control' id='inputFullName4' onChange={onChange} name="fullName" value={user.fullName} placeholder='Full Name' />
-          </div>
-          <div className='form-group col-md-6'>
-            <label htmlFor='inputBirthdate4'>Birthdate: *</label>
-            <input type='date' className='form-control' id='inputBirthdate4' onChange={onChange} name="birthdate" value={user.birthdate} placeholder='Birthdate' />
-          </div>
-          </div>
-          <div className="form-row">
-          <div className='form-group col-md-6'>
-            <label htmlFor='inputTin4'>TIN: *</label>
-            <input type='text' className='form-control' id='inputTin4' onChange={onChange} value={user.tin} name="tin" placeholder='TIN' />
-          </div>
-          <div className='form-group col-md-6'>
-            <label htmlFor='inputEmployeeType4'>Employee Type: *</label>
-            <select id='inputEmployeeType4' onChange={onChange} value={user.typeId}  name="typeId" className='form-control'>
-              <option value={0}>Regular</option>
-              <option value={1}>Contractual</option>
-            </select>
-          </div>
-          </div>
-          <button type="submit" onClick={onSubmit} disabled={loading.formSave} className="btn btn-primary mr-2">{loading.formSave?"Loading...": "Save"}</button>
-          <button type="button" onClick={onBack} className="btn btn-primary">Back</button>
+          <Row>
+            <Input
+              name={'fullName'} label={'Full Name'} placeholder={'Full Name'}
+              onChange={onChange} value={user.fullName} error={errors['fullName']}
+              required
+            />
+            <Input
+              type={'date'} name={'birthdate'}
+              label={'Birthdate'} placeholder={'Birthdate'}
+              onChange={onChange} value={user.birthdate} error={errors['birthdate']}
+              required
+            />
+          </Row>
+          <Row>
+            <Input
+              name={'tin'} label={'TIN'} placeholder={'TIN'}
+              onChange={onChange} value={user.tin} error={errors['tin']}
+              required
+            />
+            <Select
+              name={'typeId'} label={'Employee Type'}
+              onChange={onChange} value={user.typeId}
+              options={employmentTypes} required
+            />
+          </Row>
+          <Button onClick={onSubmit} disabled={loading.loadingSave} primary>
+            {loading.loadingSave ? "Loading..." : "Save"}
+          </Button>
+          <Button onClick={onBack}>Back</Button>
         </form>
       </div>
     </div>
