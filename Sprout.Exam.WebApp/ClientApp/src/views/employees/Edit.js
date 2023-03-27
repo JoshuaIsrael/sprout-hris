@@ -58,7 +58,7 @@ export function Edit ({
     setUser({
         id: data.id,
         fullName: data.fullName,
-        birthdate: new Date(data.birthdate).toISOString().split('T')[0],
+        birthdate: data.birthdate,
         tin: data.tin,
         typeId: data.typeId,
     });

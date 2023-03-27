@@ -53,6 +53,8 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
                 if (employee is null)
                     throw new Exception($"Employee with an ID of {id} not found.");
 
+                employee.Birthdate = ToShortDate(employee.Birthdate);
+
                 response.Data = _mapper.Map<GetEmployeeDto>(employee);
             }
             catch (Exception ex)
@@ -72,9 +74,10 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
             {
                 response.Data = await _context.Employees
                     .Where(e => !e.IsDeleted)
-                    .Select(e =>
-                        _mapper.Map<GetEmployeeDto>(e)
-                    ).ToListAsync();
+                    .Select(e => _mapper.Map<GetEmployeeDto>(e))
+                    .ToListAsync();
+
+                response.Data.ForEach(e => e.Birthdate = ToShortDate(e.Birthdate));
             }
             catch (Exception ex)
             {
@@ -161,6 +164,11 @@ namespace Sprout.Exam.WebApp.Services.EmployeeService
             }
 
             return response;
+        }
+
+        // Since DateOnly is not available, manually convert to ISO short date format
+        private string ToShortDate (string date) {
+            return Convert.ToDateTime(date).ToString("yyyy-MM-dd");
         }
     }
 }
